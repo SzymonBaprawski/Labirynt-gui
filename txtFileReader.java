@@ -86,7 +86,7 @@ public class txtFileReader {
         return BeginningEnd;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         System.out.println("working");
 
@@ -139,7 +139,7 @@ public class txtFileReader {
         System.out.println("BeginningEnd: " + BeginEnd[2]);
         System.out.println("BeginningEnd: " + BeginEnd[3]);
 
-    }
+    }*/
 }
 
 

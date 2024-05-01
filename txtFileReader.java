@@ -1,7 +1,5 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class txtFileReader {
@@ -45,13 +43,13 @@ public class txtFileReader {
 
             for (int i = 0; i < Columns; i++) {
                 if (chars[i] == 'X') {
-                    Lab[y][i] = 1;
+                    Lab[i][y] = 1;
                 } else if (chars[i] == ' ') {
-                    Lab[y][i] = 0;
+                    Lab[i][y] = 0;
                 } else if (chars[i] == 'P') {
-                    Lab[y][i] = 2;
+                    Lab[i][y] = 2;
                 } else if (chars[i] == 'K') {
-                    Lab[y][i] = 3;
+                    Lab[i][y] = 3;
                 }
             }
             y++;
@@ -88,7 +86,7 @@ public class txtFileReader {
         return BeginningEnd;
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
 
         System.out.println("working");
 
@@ -124,7 +122,7 @@ public class txtFileReader {
 
         for (int i = 0; i < Rows; i++) {
             for (int j = 0; j < Columns; j++) {
-                System.out.print(+Lab[i][j]);
+                System.out.print(+Lab[j][i]);
             }
             System.out.println();
         }
@@ -141,7 +139,7 @@ public class txtFileReader {
         System.out.println("BeginningEnd: " + BeginEnd[2]);
         System.out.println("BeginningEnd: " + BeginEnd[3]);
 
-    }*/
+    }
 }
 
 

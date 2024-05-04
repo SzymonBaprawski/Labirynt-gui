@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.IOException;
+import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,6 +30,10 @@ public class Main {
         int EnterY = 0;
         int ExitX = 0;
         int ExitY = 0;
+
+        File file2 = new File("Labirynt.png");
+        file2.delete();
+        
         
 
         if (fileType.equals("txt")) {
@@ -50,11 +56,11 @@ public class Main {
                     }
                     System.out.println();
                 }
-
                 new GUI(Lab, Columns, Rows, EnterX, EnterY, ExitX, ExitY);
 
 
             } catch (Exception e) {
+                System.err.println(e);
                 System.out.println("Błąd odczytu pliku - koniec działania programu");
                 return;
             }

@@ -1,6 +1,9 @@
 import javax.swing.*;
+import javax.swing.plaf.synth.SynthEditorPaneUI;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class GUI {
 
@@ -15,6 +18,7 @@ public class GUI {
     int localEnterY = 0;
     int localExitX = 0;
     int localExitY = 0;
+    int[][] Lab2;
 
     public GUI(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY) {
         
@@ -31,10 +35,10 @@ public class GUI {
         JPanel panel = new JPanel(cardLayout);
 
         JPanel edytor = new JPanel();
-        JPanel solver = new JPanel();
+        JPanel flooder = new JPanel();
 
         panel.add(edytor, "Edytor");
-        panel.add(solver, "Solver");
+        panel.add(flooder, "flooder");
 
         frame.add(panel);
 
@@ -71,9 +75,8 @@ public class GUI {
         }
 
         edytor.add(grid, BorderLayout.LINE_START);
-        
-        
-        JButton up = new JButton("Up");
+
+        JButton up = new JButton("↑");
         up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (yOffset > 0) {
@@ -85,7 +88,7 @@ public class GUI {
 
         edytor.add(up, BorderLayout.NORTH);
 
-        JButton down = new JButton("Down");
+        JButton down = new JButton("↓");
         down.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (yOffset + gridRows < Rows) {
@@ -97,7 +100,7 @@ public class GUI {
 
         edytor.add(down, BorderLayout.SOUTH);
 
-        JButton left = new JButton("Left");
+        JButton left = new JButton("←");
 
         left.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -110,7 +113,7 @@ public class GUI {
 
         edytor.add(left, BorderLayout.WEST);
 
-        JButton right = new JButton("Right");
+        JButton right = new JButton("→");
         right.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (xOffset + gridColumns < Columns) {
@@ -121,36 +124,6 @@ public class GUI {
         });
 
         edytor.add(right, BorderLayout.EAST);
-
-        JButton start = new JButton("Ustaw start");
-        start.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (aktualnyTryb == 0) {
-                    aktualnyTryb = 2;
-                    start.setText("Zakończ ustawianie startu");
-                } else if (aktualnyTryb == 2) {
-                    aktualnyTryb = 0;
-                    start.setText("Ustaw start");
-                }
-            }
-        });
-
-        edytor.add(start, BorderLayout.EAST);
-
-        JButton koniec = new JButton("Ustaw koniec");
-        koniec.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (aktualnyTryb == 0) {
-                    aktualnyTryb = 3;
-                    koniec.setText("Zakończ ustawianie końca");
-                } else if (aktualnyTryb == 3) {
-                    aktualnyTryb = 0;
-                    koniec.setText("Ustaw koniec");
-                }
-            }
-        });
-
-        edytor.add(koniec, BorderLayout.WEST);
 
         JButton budowa = new JButton("Budowa/burzenie ścian");
         budowa.addActionListener(new ActionListener() {
@@ -167,6 +140,27 @@ public class GUI {
 
         edytor.add(budowa, BorderLayout.NORTH);
 
+        JButton start = new JButton("Ustaw start");
+        start.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                    aktualnyTryb = 2;
+                    budowa.setText("Budowa/burzenie ścian");
+
+            }
+        });
+
+        edytor.add(start, BorderLayout.EAST);
+
+        JButton koniec = new JButton("Ustaw koniec");
+        koniec.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                aktualnyTryb = 3;
+                budowa.setText("Budowa/burzenie ścian");
+            }
+        });
+
+        edytor.add(koniec, BorderLayout.WEST);
+
         JButton print = new JButton("Print");
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -181,6 +175,33 @@ public class GUI {
         });
 
         edytor.add(print, BorderLayout.SOUTH);
+
+        JButton savetxt = new JButton("Zapisz do txt");
+
+        savetxt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    TxtFileWriter.WriteToFile("nowy_lab.txt", Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                } catch (Exception ex) {
+                    System.out.println("Błąd zapisu pliku");
+                }
+            }
+        });
+
+        edytor.add(savetxt, BorderLayout.SOUTH);
+
+        JButton savebin = new JButton("Zapisz do bin");
+        savebin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //do zaimplementowania
+                } catch (Exception ex) {
+                    System.out.println("Błąd zapisu pliku");
+                }
+            }
+        });
+
+        edytor.add(savebin, BorderLayout.SOUTH);
 
         for (int i = 0; i < gridColumns; i++) {
             for (int j = 0; j < gridRows; j++) {
@@ -208,6 +229,7 @@ public class GUI {
                                 buttons[x][y].setBackground(Color.GREEN);
                                 localEnterX = x + xOffset;
                                 localEnterY = y + yOffset;
+                                aktualnyTryb = 0;
                             }
                         } else if (aktualnyTryb == 3) {
                             if (Lab[x + xOffset][y + yOffset] == 0 || Lab[x + xOffset][y + yOffset] == 1) {
@@ -221,6 +243,7 @@ public class GUI {
                                 buttons[x][y].setBackground(Color.RED);
                                 localExitX = x + xOffset;
                                 localExitY = y + yOffset;
+                                aktualnyTryb = 0;
                             }
 
                         }
@@ -228,16 +251,80 @@ public class GUI {
                 });
             }
         }
-        
 
-        cardLayout.show(panel, "Edytor");
-        JButton solver_button = new JButton("Solver");
-        solver_button.addActionListener(new ActionListener() {
+
+        //TU SIĘ ZACZYNA FLOODER
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height - 70;
+
+        System.out.println("Screen width: " + screenWidth);
+        System.out.println("Screen height: " + screenHeight);
+
+        if (screenWidth / Columns < screenHeight / Rows) {
+            buttonSize = screenWidth / Columns;
+        } else {
+            buttonSize = screenHeight / Rows;
+        }
+
+        if (buttonSize == 0){
+            buttonSize = 1;
+        
+        }
+
+        ImageIcon icon = new ImageIcon("Labirynt.png");
+        Image image = icon.getImage();
+        Image newimg = image.getScaledInstance(screenWidth, screenHeight, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newimg);
+
+        JLabel label = new JLabel(icon);
+        flooder.add(label);
+
+        JLabel stan = new JLabel("Stan: w trakcie zalewania");
+        flooder.add(stan, BorderLayout.NORTH);
+
+        JButton floodOne = new JButton("Zalej raz");
+        floodOne.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(panel, "Solver");
+                if (Zalewacz.ZalanieRaz(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY) == null){
+                    stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");
+                }
+                GenerujObraz.GenerujObraz(Lab, Columns, Rows);
+                refreshImage(label, Lab, Columns, Rows);
             }
         });
-        edytor.add(solver_button, BorderLayout.SOUTH);
+
+        flooder.add(floodOne, BorderLayout.SOUTH);    
+
+        JButton floodAll = new JButton("Zalej do końca");
+        floodAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Lab2 = Zalewacz.Zalanie(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                refreshImage(label, Lab2, Columns, Rows);
+                stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");
+            }
+        });
+
+        flooder.add(floodAll, BorderLayout.SOUTH);
+
+        cardLayout.show(panel, "Edytor");
+        JButton flooder_button = new JButton("flooder");
+        flooder_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(panel, "flooder");
+                GenerujObraz.GenerujObraz(Lab, Columns, Rows);
+                //refreshImage(null, Lab, Columns, Rows);
+            }
+        });
+        edytor.add(flooder_button, BorderLayout.SOUTH);
+
+
+
+
+
 
         frame.setVisible(true);
     }
@@ -257,7 +344,15 @@ public class GUI {
                 }
             }
         }
-    }
+    } 
 
+    public void refreshImage(JLabel label, int[][] Lab, int Columns, int Rows) {
+        GenerujObraz.GenerujObraz(Lab, Columns, Rows);
+        ImageIcon icon = new ImageIcon("Labirynt.png");
+        Image image = icon.getImage();
+        Image newimg = image.getScaledInstance(Columns * buttonSize, Rows * buttonSize, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newimg);
+        label.setIcon(icon);
+    }
 }
 

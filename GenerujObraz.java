@@ -20,11 +20,8 @@ public class GenerujObraz {
                 else if(Lab[j][i] == 3){
                     image.setRGB(j, i, Color.RED.getRGB());
                 }
-                else if(Lab[j][i] == 10){
-                    image.setRGB(j, i, Color.GREEN.getRGB());
-                }
-                else if(Lab[j][i] == 11){
-                    image.setRGB(j, i, Color.RED.getRGB());
+               else if(Lab[j][i] == 4){
+                    image.setRGB(j, i, Color.BLUE.getRGB());
                 }
             }
         }

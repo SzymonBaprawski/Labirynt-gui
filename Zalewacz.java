@@ -100,6 +100,33 @@ public class Zalewacz  extends txtFileReader{
         }
     }
 
+    public static boolean czyZalewalne(int[][] Lab, int Columns, int Rows){
+        int suma = 0;
+        for(int i = 1; i < Rows-1; i++){
+            for(int j = 1; j < Columns-1; j++){
+                if (Lab[j][i] == 0){
+                    if (Lab[j-1][i] == 1){
+                        suma++;
+                    }
+                    if (Lab[j+1][i] == 1){
+                        suma++;
+                    }
+                    if (Lab[j][i-1] == 1){
+                        suma++;
+                    }
+                    if (Lab[j][i+1] == 1){
+                        suma++;
+                    }
+                    if (suma >= 3){
+                        return true;
+                    }
+                    suma = 0;
+                }
+            }
+        }
+        return false;
+    }
+
     /* Funkcja tetstujaca ZalanieRaz
     public static void main(String[] args) throws IOException {
 

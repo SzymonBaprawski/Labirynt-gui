@@ -25,5 +25,5 @@ replay_pid*
 
 #pliki labiryntu
 *.txt
-*.png
+Labirynt.png
 *.bin

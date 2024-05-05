@@ -1,9 +1,12 @@
 import javax.swing.*;
-import javax.swing.plaf.synth.SynthEditorPaneUI;
-
 import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 
@@ -19,6 +22,8 @@ public class GUI {
     int localExitX = 0;
     int localExitY = 0;
     int[][] Lab2;
+   int stepDelay = 20;
+    ArrayList<Integer> coords = new ArrayList<Integer>();
 
     public GUI(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY) {
         
@@ -160,7 +165,7 @@ public class GUI {
         });
 
         edytor.add(koniec, BorderLayout.WEST);
-
+/*
         JButton print = new JButton("Print");
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -175,7 +180,7 @@ public class GUI {
         });
 
         edytor.add(print, BorderLayout.SOUTH);
-
+*/
         JButton savetxt = new JButton("Zapisz do txt");
 
         savetxt.addActionListener(new ActionListener() {
@@ -255,6 +260,8 @@ public class GUI {
 
         //TU SIĘ ZACZYNA FLOODER
 
+        Lab2 = Lab;
+
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         int screenWidth = screenSize.width;
@@ -280,31 +287,181 @@ public class GUI {
         icon = new ImageIcon(newimg);
 
         JLabel label = new JLabel(icon);
-        flooder.add(label);
+        flooder.add(label, BorderLayout.CENTER);
 
         JLabel stan = new JLabel("Stan: w trakcie zalewania");
         flooder.add(stan, BorderLayout.NORTH);
 
+        JButton floodZapiszDoTxt = new JButton("Zapisz do txt");
+        floodZapiszDoTxt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    TxtFileWriter.WriteToFile("nowy_lab.txt", Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                } catch (Exception ex) {
+                    System.out.println("Błąd zapisu pliku");
+                }
+            }
+        });
+
+        flooder.add(floodZapiszDoTxt, BorderLayout.SOUTH);
+
+        JButton floodZapiszDoBin = new JButton("Zapisz do bin");
+        floodZapiszDoBin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //do zaimplementowania
+                } catch (Exception ex) {
+                    System.out.println("Błąd zapisu pliku");
+                }
+            }
+        });
+
+        flooder.add(floodZapiszDoBin, BorderLayout.SOUTH);
+
+        JButton autoZalew = new JButton("Zalej automatycznie");
+        JButton oneStep = new JButton("Jeden krok");
+        JButton allSteps = new JButton("Do końca");
         JButton floodOne = new JButton("Zalej raz");
+        JButton floodAll = new JButton("Zalej do końca");
+        JButton autoStep = new JButton("Automatyczny krok");
+
+        oneStep.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Lab2[coords.get(0)][coords.get(1)] = 4;
+                GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
+                coords.remove(0);
+                coords.remove(0);
+
+                if (coords.size() == 0){
+                    stan.setText("Stan: Zakończono wyznaczanie ścieżki");
+                    oneStep.setVisible(false);
+                    allSteps.setVisible(false);
+                    autoStep.setVisible(false);
+                }
+            }
+        });
+
+        autoStep.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Thread thread = new Thread(() -> {
+                    while (coords.size() > 0) {
+                        Lab2[coords.get(0)][coords.get(1)] = 4;
+                        GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                        SwingUtilities.invokeLater(() -> refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth));
+                        coords.remove(0);
+                        coords.remove(0);
+                        try {
+                            Thread.sleep(stepDelay);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    stan.setText("Stan: Zakończono wyznaczanie ścieżki");
+                    oneStep.setVisible(false);
+                    allSteps.setVisible(false);
+                    autoStep.setVisible(false);
+                });
+                thread.start();
+            }
+        });
+
+        autoZalew.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Thread thread = new Thread(() -> {
+                    while(Zalewacz.czyZalewalne(Lab2, Columns, Rows)) {
+                        Lab2 = Zalewacz.ZalanieRaz(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                        GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                        SwingUtilities.invokeLater(() -> refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth));
+                        try {
+                            Thread.sleep(stepDelay);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");
+                    coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                    SwingUtilities.invokeLater(() -> {
+                        oneStep.setVisible(true);
+                        allSteps.setVisible(true);
+                        autoStep.setVisible(true);
+                        autoZalew.setVisible(false);
+                        floodZapiszDoTxt.setVisible(false);
+                        floodZapiszDoBin.setVisible(false);
+                        floodAll.setVisible(false);
+                        floodOne.setVisible(false);
+                    });
+                });
+                thread.start();
+            }
+        });
+
+
+
+        
+        allSteps.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (int i  = 0; i < coords.size() - 2; i+=2){
+                    Lab2[coords.get(i)][coords.get(i+1)] = 4;
+                    GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                    refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
+                    stan.setText("Stan: Zakończono wyznaczanie ścieżki");
+                    oneStep.setVisible(false);
+                    allSteps.setVisible(false);
+                    autoStep.setVisible(false);
+                }
+            }
+        });
+
+        flooder.add(oneStep, BorderLayout.SOUTH);
+        flooder.add(allSteps, BorderLayout.SOUTH);
+        flooder.add(autoStep, BorderLayout.SOUTH);
+        flooder.add(autoZalew, BorderLayout.SOUTH);
+
+        oneStep.setVisible(false);
+        allSteps.setVisible(false);
+        autoStep.setVisible(false);
+
+
+        
         floodOne.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (Zalewacz.ZalanieRaz(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY) == null){
+                if (Zalewacz.ZalanieRaz(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY) == null){
                     stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");
+                    floodAll.setVisible(false);
+                    floodOne.setVisible(false);
+                    coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                    oneStep.setVisible(true);
+                    allSteps.setVisible(true);
+                    autoStep.setVisible(true);
+                    floodZapiszDoTxt.setVisible(false);
+                    floodZapiszDoBin.setVisible(false);
+                    autoZalew.setVisible(false);
                 }
                 GenerujObraz.GenerujObraz(Lab, Columns, Rows);
-                refreshImage(label, Lab, Columns, Rows);
+                refreshImage(label, Lab, Columns, Rows, screenHeight, screenWidth);
             }
         });
 
         flooder.add(floodOne, BorderLayout.SOUTH);    
 
-        JButton floodAll = new JButton("Zalej do końca");
+        
         floodAll.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Lab2 = Zalewacz.Zalanie(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
                 GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
-                refreshImage(label, Lab2, Columns, Rows);
+                refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
                 stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");
+                floodAll.setVisible(false);
+                floodOne.setVisible(false);
+                coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                oneStep.setVisible(true);
+                allSteps.setVisible(true);
+                autoStep.setVisible(true);
+                floodZapiszDoTxt.setVisible(false);
+                floodZapiszDoBin.setVisible(false);
+                autoZalew.setVisible(false);
             }
         });
 
@@ -321,10 +478,9 @@ public class GUI {
         });
         edytor.add(flooder_button, BorderLayout.SOUTH);
 
+        
 
-
-
-
+        
 
         frame.setVisible(true);
     }
@@ -346,13 +502,23 @@ public class GUI {
         }
     } 
 
-    public void refreshImage(JLabel label, int[][] Lab, int Columns, int Rows) {
-        GenerujObraz.GenerujObraz(Lab, Columns, Rows);
-        ImageIcon icon = new ImageIcon("Labirynt.png");
-        Image image = icon.getImage();
-        Image newimg = image.getScaledInstance(Columns * buttonSize, Rows * buttonSize, Image.SCALE_SMOOTH);
-        icon = new ImageIcon(newimg);
-        label.setIcon(icon);
+    public void refreshImage(JLabel label, int[][] Lab, int Columns, int Rows, int screenHeight, int screenWidth) {
+        if (screenHeight < Rows || screenWidth < Columns){
+            ImageIcon icon = new ImageIcon("ResError.png");
+            Image image = icon.getImage();
+            Image newimg = image.getScaledInstance(1365, 170, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(newimg);
+            label.setIcon(icon);
+        }
+        
+        else{
+            GenerujObraz.GenerujObraz(Lab, Columns, Rows);
+            ImageIcon icon = new ImageIcon("Labirynt.png");
+            Image image = icon.getImage();
+            Image newimg = image.getScaledInstance(Columns * buttonSize, Rows * buttonSize, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(newimg);
+            label.setIcon(icon);
+        }
     }
 }
 

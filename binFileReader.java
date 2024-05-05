@@ -64,7 +64,7 @@ public class binFileReader {
         int index2= 0;
         int index1= 0;
 
-        for(int i = 0; i < Counter+1; i++) {
+        for(int i = 0; i < Counter; i++) {
             InputStream.skip(1);
             int tmp = InputStream.read();
             int ile = InputStream.read();
@@ -100,8 +100,8 @@ public class binFileReader {
         return Lab;
     }
 
-    /* funkcja testujaca Data:
-    public static void main(String[] args){
+
+    /*public static void main(String[] args){
         String inputFile = args[0];
 
         short[] Data = null;
@@ -116,8 +116,8 @@ public class binFileReader {
         }
     }*/
 
-   /* Funkcja testujaca BinToInt
-    public static void main(String[] args) {
+
+    /*public static void main(String[] args) {
         String inputFile = args[0];
 
         int[][] Lab = null;

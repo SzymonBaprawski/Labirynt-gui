@@ -192,7 +192,7 @@ public class BinFileWriter extends Follower{
     }
 
 
-    public static void main (String [] args) throws IOException {
+    /*public static void main (String [] args) throws IOException {
         String FilePath = args[0];
 
         File file = new File(FilePath);
@@ -228,5 +228,5 @@ public class BinFileWriter extends Follower{
 
         WriteLab("proba.bin", Lab, Columns, Rows, EntryX, EntryY, ExitX, ExitY);
         WriteSolve("proba.bin", coords, EntryX,EntryY);
-    }
+    }*/
 }

@@ -3,7 +3,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 
 
-public class binFileReader {
+public class binFileReader  {
 
     public static short[] Data(String file) throws IOException {
         short[] Data = new short[7];
@@ -59,8 +59,6 @@ public class binFileReader {
 
         int Wall = InputStream.read();
         int Path = InputStream.read();
-        System.out.println("Path: " + Path);
-        System.out.println("Wall: " + Wall);
         int index2= 0;
         int index1= 0;
 

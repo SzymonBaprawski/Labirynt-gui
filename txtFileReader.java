@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class txtFileReader {
+public class txtFileReader extends binFileReader{
 
     public static int Columns(File file) throws IOException {
         Scanner scanner = new Scanner(file);

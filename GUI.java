@@ -3,9 +3,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-
-import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 
 public class GUI {
@@ -25,7 +22,7 @@ public class GUI {
    int stepDelay = 20;
     ArrayList<Integer> coords = new ArrayList<Integer>();
 
-    public GUI(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY) {
+    public GUI(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY, String fileType) {
         
         localEnterX = EnterX;
         localEnterY = EnterY;
@@ -199,7 +196,11 @@ public class GUI {
         savebin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //do zaimplementowania
+                    if (fileType.equals("txt")) {
+                        BinFileWriter.WriteLab("nowy_lab.bin", Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                    }else if (fileType.equals("bin")) {
+                        BinFileWriter.WriteLab("nowy_lab.bin", Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                    }
                 } catch (Exception ex) {
                     System.out.println("Błąd zapisu pliku");
                 }
@@ -402,15 +403,15 @@ public class GUI {
         
         allSteps.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                oneStep.setVisible(false);
+                allSteps.setVisible(false);
+                autoStep.setVisible(false);
                 for (int i  = 0; i < coords.size() - 2; i+=2){
-                    Lab2[coords.get(i)][coords.get(i+1)] = 4;
-                    GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
-                    refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
-                    stan.setText("Stan: Zakończono wyznaczanie ścieżki");
-                    oneStep.setVisible(false);
-                    allSteps.setVisible(false);
-                    autoStep.setVisible(false);
+                    Lab2[coords.get(i)][coords.get(i+1)] = 4;    
                 }
+                GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
+                stan.setText("Stan: Zakończono wyznaczanie ścieżki");
             }
         });
 
@@ -449,19 +450,19 @@ public class GUI {
         
         floodAll.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                floodAll.setVisible(false);
+                floodOne.setVisible(false);
+                floodZapiszDoTxt.setVisible(false);
+                floodZapiszDoBin.setVisible(false);
+                autoZalew.setVisible(false);
                 Lab2 = Zalewacz.Zalanie(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
                 GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
                 refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
                 stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");
-                floodAll.setVisible(false);
-                floodOne.setVisible(false);
                 coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
                 oneStep.setVisible(true);
                 allSteps.setVisible(true);
                 autoStep.setVisible(true);
-                floodZapiszDoTxt.setVisible(false);
-                floodZapiszDoBin.setVisible(false);
-                autoZalew.setVisible(false);
             }
         });
 
@@ -503,22 +504,16 @@ public class GUI {
     } 
 
     public void refreshImage(JLabel label, int[][] Lab, int Columns, int Rows, int screenHeight, int screenWidth) {
-        if (screenHeight < Rows || screenWidth < Columns){
-            ImageIcon icon = new ImageIcon("ResError.png");
-            Image image = icon.getImage();
-            Image newimg = image.getScaledInstance(1365, 170, Image.SCALE_SMOOTH);
-            icon = new ImageIcon(newimg);
-            label.setIcon(icon);
-        }
+        boolean flag = screenHeight < Rows || screenWidth < Columns;
+
+        ImageIcon icon = new ImageIcon(flag ? "ResError.png" : "Labirynt.png");
+        Image image = icon.getImage();
+        Image newimg = flag ? 
+            image.getScaledInstance(1365, 170, Image.SCALE_SMOOTH) :
+            image.getScaledInstance(Columns * buttonSize, Rows * buttonSize, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newimg);
+        label.setIcon(icon);
         
-        else{
-            GenerujObraz.GenerujObraz(Lab, Columns, Rows);
-            ImageIcon icon = new ImageIcon("Labirynt.png");
-            Image image = icon.getImage();
-            Image newimg = image.getScaledInstance(Columns * buttonSize, Rows * buttonSize, Image.SCALE_SMOOTH);
-            icon = new ImageIcon(newimg);
-            label.setIcon(icon);
-        }
     }
 }
 

@@ -90,8 +90,8 @@ public class binFileReader  {
             }
         }
 
-        Lab[EntryX-1][EntryY-1]= 2;
-        Lab[ExitX-1][ExitY-1]= 3;
+        Lab[EntryX][EntryY]= 2;
+        Lab[ExitX][ExitY]= 3;
 
         InputStream.close();
 

@@ -64,7 +64,7 @@ public class BinFileWriter extends Follower  {
         int words = 0;
         int sign = Lab[0][0];
 
-        Lab[EnterX][EnterY] = 0;
+        Lab[EnterX+1][EnterY+1] = 0;
         Lab[ExitX][ExitY] = 0;
 
         for (int i = 0; i < Rows; i++) {

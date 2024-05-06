@@ -56,7 +56,7 @@ public class Main {
                     }
                     System.out.println();
                 }*/
-                new GUI(Lab, Columns, Rows, EnterX, EnterY, ExitX, ExitY);
+                new GUI(Lab, Columns, Rows, EnterX, EnterY, ExitX, ExitY, "txt");
 
 
             } catch (Exception e) {
@@ -81,10 +81,10 @@ public class Main {
 
             Rows = Data[1];
 
-            EnterX = Data[2];
-            EnterY = Data[3];
-            ExitX = Data[4];
-            ExitY = Data[5];
+            EnterX = Data[2]-1;
+            EnterY = Data[3]-1;
+            ExitX = Data[4]-1;
+            ExitY = Data[5]-1;
 
             System.out.println("Columns: " + Columns);
             System.out.println("Rows: " + Rows);
@@ -100,15 +100,16 @@ public class Main {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
+            /*
             for (int i = 0; i < Rows; i++) {
                 for (int j = 0; j < Columns; j++) {
                     System.out.print(+Lab[j][i]);
                 }
                 System.out.println();
             }
+            */
 
-            new GUI(Lab, Columns, Rows, EnterX, EnterY, ExitX, ExitY);
+            new GUI(Lab, Columns, Rows, EnterX, EnterY, ExitX, ExitY, "bin");
 
 
         }

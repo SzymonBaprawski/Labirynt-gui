@@ -293,31 +293,6 @@ public class GUI {
         JLabel stan = new JLabel("Stan: w trakcie zalewania");
         flooder.add(stan, BorderLayout.NORTH);
 
-        JButton floodZapiszDoTxt = new JButton("Zapisz do txt");
-        floodZapiszDoTxt.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    TxtFileWriter.WriteToFile("nowy_lab.txt", Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
-                } catch (Exception ex) {
-                    System.out.println("Błąd zapisu pliku");
-                }
-            }
-        });
-
-        flooder.add(floodZapiszDoTxt, BorderLayout.SOUTH);
-
-        JButton floodZapiszDoBin = new JButton("Zapisz do bin");
-        floodZapiszDoBin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    //do zaimplementowania
-                } catch (Exception ex) {
-                    System.out.println("Błąd zapisu pliku");
-                }
-            }
-        });
-
-        flooder.add(floodZapiszDoBin, BorderLayout.SOUTH);
 
         JButton autoZalew = new JButton("Zalej automatycznie");
         JButton oneStep = new JButton("Jeden krok");
@@ -388,8 +363,8 @@ public class GUI {
                         allSteps.setVisible(true);
                         autoStep.setVisible(true);
                         autoZalew.setVisible(false);
-                        floodZapiszDoTxt.setVisible(false);
-                        floodZapiszDoBin.setVisible(false);
+                         
+                         
                         floodAll.setVisible(false);
                         floodOne.setVisible(false);
                     });
@@ -436,8 +411,8 @@ public class GUI {
                     oneStep.setVisible(true);
                     allSteps.setVisible(true);
                     autoStep.setVisible(true);
-                    floodZapiszDoTxt.setVisible(false);
-                    floodZapiszDoBin.setVisible(false);
+                     
+                     
                     autoZalew.setVisible(false);
                 }
                 GenerujObraz.GenerujObraz(Lab, Columns, Rows);
@@ -452,8 +427,8 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 floodAll.setVisible(false);
                 floodOne.setVisible(false);
-                floodZapiszDoTxt.setVisible(false);
-                floodZapiszDoBin.setVisible(false);
+                 
+                 
                 autoZalew.setVisible(false);
                 Lab2 = Zalewacz.Zalanie(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
                 GenerujObraz.GenerujObraz(Lab2, Columns, Rows);

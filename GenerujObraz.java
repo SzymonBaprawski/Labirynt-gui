@@ -23,6 +23,9 @@ public class GenerujObraz {
                else if(Lab[j][i] == 4){
                     image.setRGB(j, i, Color.BLUE.getRGB());
                 }
+                else if(Lab[j][i] == 5){
+                    image.setRGB(j, i, Color.ORANGE.getRGB());
+                }
             }
         }
         try {

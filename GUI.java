@@ -300,6 +300,21 @@ public class GUI {
         JButton floodOne = new JButton("Zalej raz");
         JButton floodAll = new JButton("Zalej do końca");
         JButton autoStep = new JButton("Automatyczny krok");
+        JButton wallfollower = new JButton("Wallfollower");
+
+        wallfollower.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                oneStep.setVisible(true);
+                allSteps.setVisible(true);
+                autoStep.setVisible(true);
+                autoZalew.setVisible(false);
+                floodAll.setVisible(false);
+                floodOne.setVisible(false);
+                wallfollower.setVisible(false);
+            }
+        });
+                
 
         oneStep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -314,6 +329,7 @@ public class GUI {
                     oneStep.setVisible(false);
                     allSteps.setVisible(false);
                     autoStep.setVisible(false);
+                    wallfollower.setVisible(false);
                 }
             }
         });
@@ -337,6 +353,7 @@ public class GUI {
                     oneStep.setVisible(false);
                     allSteps.setVisible(false);
                     autoStep.setVisible(false);
+                    wallfollower.setVisible(false);
                 });
                 thread.start();
             }
@@ -381,6 +398,7 @@ public class GUI {
                 oneStep.setVisible(false);
                 allSteps.setVisible(false);
                 autoStep.setVisible(false);
+                wallfollower.setVisible(false);
                 for (int i  = 0; i < coords.size() - 2; i+=2){
                     Lab2[coords.get(i)][coords.get(i+1)] = 4;    
                 }
@@ -394,10 +412,12 @@ public class GUI {
         flooder.add(allSteps, BorderLayout.SOUTH);
         flooder.add(autoStep, BorderLayout.SOUTH);
         flooder.add(autoZalew, BorderLayout.SOUTH);
+        flooder.add(wallfollower, BorderLayout.SOUTH);
 
         oneStep.setVisible(false);
         allSteps.setVisible(false);
         autoStep.setVisible(false);
+        wallfollower.setVisible(true);
 
 
         

@@ -11,47 +11,138 @@ public class Follower extends Zalewacz {
 
     public static ArrayList<Integer> Follow (int[][] Lab, int Columns, int Rows, int EntryX, int EntryY, int ExitX, int ExitY) {
         ArrayList<Integer> coords = new ArrayList<Integer>();
+        
+        char kierunek = 'N';
         int x = EntryX;
         int y = EntryY;
-        Lab[ExitX][ExitY] = 0;
 
-        while (x != ExitX || y != ExitY) {
-            if(Lab[x+1][y] == 0) {
-                Lab[x][y] =2;
-                x++;
-                coords.add(x);
-                coords.add(y);
-            }else if(Lab[x][y+1] == 0){
-                Lab[x][y] =2;
-                y++;
-                coords.add(x);
-                coords.add(y);
-            }else if(Lab[x-1][y] == 0){
-                Lab[x][y] =2;
-                x--;
-                coords.add(x);
-                coords.add(y);
-            }else if(Lab[x][y-1] == 0) {
-                Lab[x][y] = 2;
-                y--;
-                coords.add(x);
-                coords.add(y);
+        coords.add(x);
+        coords.add(y);
+
+
+        if (x == 0){
+            kierunek = 'E';
+        } else if (y == 0){
+            kierunek = 'S';
+        } else if (x == Columns-1){
+            kierunek = 'W';
+        } else if (y == Rows-1){
+            kierunek = 'N';
+        } else{
+            //sprawdzenie z której strony jest wolne pole
+            if (Lab[x+1][y] != 1){
+                kierunek = 'E';
+            } else if (Lab[x-1][y] != 1){
+                kierunek = 'W';
+            } else if (Lab[x][y+1] != 1){
+                kierunek = 'S';
+            } else if (Lab[x][y-1] != 1){
+                kierunek = 'N';
+            } else {
+                System.out.println("Ups, coś poszło nie tak\n");
             }
         }
 
-        for(int i = 0; i <Rows; i++) {
-            for(int j = 0; j < Columns; j++) {
-                if(Lab[j][i] == 2) {
-                    Lab[j][i] = 0;
+        while (x != ExitX || y != ExitY){
+            if (kierunek == 'E'){
+                if (y > 0 && Lab[x][y-1] != 1){
+                    kierunek = 'N';
+                    y--;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (x < Columns && Lab[x+1][y] != 1){
+                    x++;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (y < Rows && Lab[x][y+1] != 1){
+                    kierunek = 'S';
+                    y++;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (x > 0 && Lab[x-1][y] != 1){
+                    kierunek = 'W';
+                    x--;
+                    coords.add(x);
+                    coords.add(y);
+                }
+            }
+    
+            else if (kierunek == 'W'){
+                if (y > 0 && Lab[x][y+1] != 1){
+                    kierunek = 'S';
+                    y++;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (x > 0 && Lab[x-1][y] != 1){
+                    x--;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (y > 0 && Lab[x][y-1] != 1){
+                    kierunek = 'N';
+                    y--;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (x < Columns && Lab[x+1][y] != 1){
+                    kierunek = 'E';
+                    x++;
+                    coords.add(x);
+                    coords.add(y);
+                }
+            }
+    
+            else if (kierunek == 'N'){
+                if (x > 0 && Lab[x-1][y] != 1){
+                    kierunek = 'W';
+                    x--;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (y > 0 && Lab[x][y-1] != 1){
+                    y--;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (x < Columns && Lab[x+1][y] != 1){
+                    kierunek = 'E';
+                    x++;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (y > 0 && Lab[x][y+1] != 1){
+                    kierunek = 'S';
+                    y++;
+                    coords.add(x);
+                    coords.add(y);
+                }
+            }
+    
+    
+            else if (kierunek == 'S'){
+                if (x < Columns && Lab[x+1][y] != 1){
+                    kierunek = 'E';
+                    x++;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (y < Rows && Lab[x][y+1] != 1){
+                    y++;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (x > 0 && Lab[x-1][y] != 1){
+                    kierunek = 'W';
+                    x--;
+                    coords.add(x);
+                    coords.add(y);
+                } else if (y < Rows && Lab[x][y-1] != 1){
+                    kierunek = 'N';
+                    y--;
+                    coords.add(x);
+                    coords.add(y);
                 }
             }
         }
-
-        Lab[ExitX][ExitY] = 3;
-        Lab[EntryX][EntryY] = 2;
+        
 
         return coords;
     }
+
+    
 
     /*public static void main(String[] args) throws IOException {
         String FilePath = args[0];

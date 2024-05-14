@@ -301,6 +301,7 @@ public class GUI {
         JButton floodAll = new JButton("Zalej do końca");
         JButton autoStep = new JButton("Automatyczny krok");
         JButton wallfollower = new JButton("Wallfollower");
+        JButton rightPath = new JButton("Pokaż dobrą ścieżkę");
 
         wallfollower.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -312,8 +313,40 @@ public class GUI {
                 floodAll.setVisible(false);
                 floodOne.setVisible(false);
                 wallfollower.setVisible(false);
+                flooder.add(rightPath, BorderLayout.SOUTH);
+                rightPath.setVisible(false);
             }
         });
+
+        rightPath.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Lab2[localEnterX][localEnterY] = 2;
+                for (int i = 0; i < Rows; i++) {
+                    for (int j = 0; j < Columns; j++) {
+                        if(Lab2[j][i] == 4) {
+                            Lab2[j][i] = 0;
+                        }
+                    }
+                }
+                Lab2= Zalewacz.Zalanie(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY );
+
+                coords = null;
+                coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+
+                while (coords.size() > 0) {
+                    Lab2[coords.get(0)][coords.get(1)] = 5;
+                    coords.remove(0);
+                    coords.remove(0);
+                }
+
+                GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
+                refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
+
+                rightPath.setVisible(false);
+                stan.setText("Stan: Pokazanie Dobrej Ścieżki");
+            }
+        });
+
                 
 
         oneStep.addActionListener(new ActionListener() {
@@ -330,6 +363,7 @@ public class GUI {
                     allSteps.setVisible(false);
                     autoStep.setVisible(false);
                     wallfollower.setVisible(false);
+                    rightPath.setVisible(true);
                 }
             }
         });
@@ -354,6 +388,7 @@ public class GUI {
                     allSteps.setVisible(false);
                     autoStep.setVisible(false);
                     wallfollower.setVisible(false);
+                    rightPath.setVisible(true);
                 });
                 thread.start();
             }
@@ -399,6 +434,7 @@ public class GUI {
                 allSteps.setVisible(false);
                 autoStep.setVisible(false);
                 wallfollower.setVisible(false);
+                rightPath.setVisible(true);
                 for (int i  = 0; i < coords.size() - 2; i+=2){
                     Lab2[coords.get(i)][coords.get(i+1)] = 4;    
                 }
@@ -418,6 +454,7 @@ public class GUI {
         allSteps.setVisible(false);
         autoStep.setVisible(false);
         wallfollower.setVisible(true);
+        rightPath.setVisible(false);
 
 
         

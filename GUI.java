@@ -320,25 +320,7 @@ public class GUI {
 
         rightPath.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Lab2[localEnterX][localEnterY] = 2;
-                for (int i = 0; i < Rows; i++) {
-                    for (int j = 0; j < Columns; j++) {
-                        if(Lab2[j][i] == 4) {
-                            Lab2[j][i] = 0;
-                        }
-                    }
-                }
-                Lab2= Zalewacz.Zalanie(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY );
-
-                coords = null;
-                coords = Follower.Follow(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
-
-                while (coords.size() > 0) {
-                    Lab2[coords.get(0)][coords.get(1)] = 5;
-                    coords.remove(0);
-                    coords.remove(0);
-                }
-
+                Lab2= Zalewacz.Zalanie(Lab2, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY, 4, 5);
                 GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
                 refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
 
@@ -487,7 +469,7 @@ public class GUI {
                  
                  
                 autoZalew.setVisible(false);
-                Lab2 = Zalewacz.Zalanie(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY);
+                Lab2 = Zalewacz.Zalanie(Lab, Columns, Rows, localEnterX, localEnterY, localExitX, localExitY, 0, 1);
                 GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
                 refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
                 stan.setText("Stan: Zalany labirynt - można przejść do wyznaczanie ścieżki");

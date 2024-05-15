@@ -3,7 +3,7 @@ import java.io.IOException;
 
 public class Zalewacz  extends txtFileReader{
 
-    public static int[][] Zalanie(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY){
+    public static int[][] Zalanie(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY, int backValue, int newValue){
         int CounterZmian = 1;
 
         int suma = 0;
@@ -15,21 +15,21 @@ public class Zalewacz  extends txtFileReader{
             
             for(int i = 1; i < Rows-1; i++){
                 for(int j = 1; j < Columns-1; j++){
-                    if (Lab[j][i] == 0){
-                        if (Lab[j-1][i] == 1){
+                    if (Lab[j][i] == backValue){
+                        if (Lab[j-1][i] == 1 || Lab[j-1][i] == 5){
                             suma++;
                         }
-                        if (Lab[j+1][i] == 1){
+                        if (Lab[j+1][i] == 1 || Lab[j+1][i] == 5){
                             suma++;
                         }
-                        if (Lab[j][i-1] == 1){
+                        if (Lab[j][i-1] == 1 || Lab[j][i-1] == 5){
                             suma++;
                         }
-                        if (Lab[j][i+1] == 1){
+                        if (Lab[j][i+1] == 1 || Lab[j][i+1] == 5){
                             suma++;
                         }
                         if (suma >= 3){
-                            Lab[j][i] = 1;
+                            Lab[j][i] = newValue;
                             CounterZmian++;
                         }
                         suma = 0;

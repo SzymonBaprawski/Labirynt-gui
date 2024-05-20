@@ -19,7 +19,8 @@ public class GUI {
     int localExitX = 0;
     int localExitY = 0;
     int[][] Lab2;
-   int stepDelay = 20;
+    int stepDelay = 20;
+    int stopFollower = 0;
     ArrayList<Integer> coords = new ArrayList<Integer>();
 
     public GUI(int[][] Lab, int Columns, int Rows, int EnterX, int EnterY, int ExitX, int ExitY, String fileType) {
@@ -333,6 +334,7 @@ public class GUI {
 
         oneStep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                stopFollower = 1;
                 Lab2[coords.get(0)][coords.get(1)] = 4;
                 GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
                 refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth);
@@ -353,7 +355,7 @@ public class GUI {
         autoStep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Thread thread = new Thread(() -> {
-                    while (coords.size() > 0) {
+                    while (coords.size() > 0 && stopFollower == 0) {
                         Lab2[coords.get(0)][coords.get(1)] = 4;
                         GenerujObraz.GenerujObraz(Lab2, Columns, Rows);
                         SwingUtilities.invokeLater(() -> refreshImage(label, Lab2, Columns, Rows, screenHeight, screenWidth));
@@ -412,6 +414,7 @@ public class GUI {
         
         allSteps.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                stopFollower = 1;
                 oneStep.setVisible(false);
                 allSteps.setVisible(false);
                 autoStep.setVisible(false);
